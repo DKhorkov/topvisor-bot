@@ -1,0 +1,3 @@
+-r local.txt
+packaging==24.0
+gunicorn==22.0.0

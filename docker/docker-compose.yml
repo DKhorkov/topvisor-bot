@@ -1,0 +1,32 @@
+version: '3'
+
+services:
+  topvisor_bot:
+    container_name: topvisor_bot
+    image: topvisor_bot
+    build:
+      context: ../
+      dockerfile: ./docker/Dockerfile
+    entrypoint: /app/docker/entrypoint.sh
+    env_file:
+      - ../.env
+    ports:
+      - ${PORT}:${PORT}
+    depends_on:
+      - database
+    volumes:
+      - ../alembic/versions:/app/alembic/versions
+
+  database:
+    container_name: database
+    hostname: postgresql
+    image: postgres
+    restart: always
+    env_file:
+      - .env
+    volumes:
+      - ../database_data:/var/lib/postgresql/data
+      - ../database_backups:/backups
+      - ../scripts/postgres:/scripts
+    ports:
+      - ${POSTGRES_PORT}:${POSTGRES_PORT}

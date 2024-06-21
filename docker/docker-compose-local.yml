@@ -1,0 +1,16 @@
+version: '3'
+
+services:
+  database:
+    container_name: database
+    hostname: postgresql
+    image: postgres
+    restart: always
+    env_file:
+      - .env.local
+    volumes:
+      - ../database_data:/var/lib/postgresql/data
+      - ../database_backups:/backups
+      - ../scripts/postgres:/scripts
+    ports:
+      - ${POSTGRES_PORT}:${POSTGRES_PORT}
