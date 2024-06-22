@@ -1,6 +1,6 @@
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncEngine, async_sessionmaker
 
-from src.database.config import database_config
+from src.core.database.config import database_config
 
 
 """
