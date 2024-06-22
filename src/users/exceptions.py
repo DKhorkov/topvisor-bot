@@ -1,5 +1,3 @@
-
-
 from src.users.constants import ErrorDetails
 from src.core.exceptions import DetailedHTTPException
 

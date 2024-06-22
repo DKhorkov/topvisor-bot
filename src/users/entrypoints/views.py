@@ -18,11 +18,7 @@ class UsersViews:
         self._uow: UsersUnitOfWork = uow
 
     async def get_user_account(self, user_id: int) -> UserModel:
-        users_service: UsersService = UsersService(self._uow)
-        user: UserModel = await users_service.get_user_by_id(id=user_id)
-        return user
+        return await UsersService(self._uow).get_user_by_id(id=user_id)
 
     async def get_all_users(self) -> List[UserModel]:
-        users_service: UsersService = UsersService(self._uow)
-        users: List[UserModel] = await users_service.get_all_users()
-        return users
+        return await UsersService(self._uow).get_all_users()

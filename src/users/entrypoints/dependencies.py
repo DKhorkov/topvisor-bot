@@ -1,14 +1,17 @@
 from typing import List
 from aiogram.types import Message
 
+from src.tasks.service_layer.service import TasksService
+from src.tasks.service_layer.units_of_work import SQLAlchemyTasksUnitOfWork
 from src.users.constants import UserRoles, ADMINS_TELEGRAM_IDS
 from src.users.domain.models import UserModel
-from src.users.service_layer.views import UsersViews
+from src.users.entrypoints.views import UsersViews
 from src.users.service_layer.service import UsersService
 from src.users.service_layer.units_of_work import SQLAlchemyUsersUnitOfWork
 
 
 async def register_user(message: Message) -> UserModel:
+    assert message.from_user is not None  # Check for mypy. Also register should work only with private messages
     users_service: UsersService = UsersService(uow=SQLAlchemyUsersUnitOfWork())
 
     user: UserModel
@@ -23,6 +26,9 @@ async def register_user(message: Message) -> UserModel:
                 role=UserRoles.DEFAULT if message.from_user.id not in ADMINS_TELEGRAM_IDS else UserRoles.ADMIN
             )
         )
+
+        tasks_service: TasksService = TasksService(uow=SQLAlchemyTasksUnitOfWork())
+        await tasks_service.create_tasks_associations_for_user(user=user)
     else:
         user = await users_service.get_user_by_id(id=message.from_user.id)
 

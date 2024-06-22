@@ -10,6 +10,16 @@ ignore_missing_imports = false
 disable_error_code = ['empty-body', 'method-assign']
 exclude = ['database_data/', 'database_backups/', 'alembic/']
 
+# Avoiding incorrect 'override' error:
+[[tool.mypy.overrides]]
+module = [
+    "src.users.interfaces.repositories",
+    "src.users.adapters.repositories",
+    "src.tasks.interfaces.repositories",
+    "src.tasks.adapters.repositories",
+]
+disable_error_code = ["override"]
+
 [tool.pytest.ini_options]
 testpaths = [
     'tests',
