@@ -38,3 +38,11 @@ async def register_user(message: Message) -> UserModel:
 async def get_all_users() -> List[UserModel]:
     users_views: UsersViews = UsersViews(uow=SQLAlchemyUsersUnitOfWork())
     return await users_views.get_all_users()
+
+
+async def check_if_user_is_admin(message: Message) -> bool:
+    assert message.from_user is not None
+
+    users_service: UsersService = UsersService(uow=SQLAlchemyUsersUnitOfWork())
+    user: UserModel = await users_service.get_user_by_id(id=message.from_user.id)
+    return user.role == UserRoles.ADMIN

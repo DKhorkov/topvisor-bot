@@ -16,7 +16,7 @@ async def launch_bot() -> None:
     await dispatcher.start_polling(bot)
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     try:
         logging.basicConfig(level=logging.INFO, stream=sys.stdout)
         on_startup()

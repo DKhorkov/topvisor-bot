@@ -114,3 +114,9 @@ open ```htmlcov/index.html``` file in browser:
 coverage run -m pytest -v
 coverage html
 ```
+
+
+### Create or update tasks for challenge
+
+To create or update tasks for challenge, user with admin privileges should send a YAML file with tasks,
+similarly to ```src/tasks/CREATE_TASKS_EXAMPLE_FILE.yaml```

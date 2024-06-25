@@ -4,7 +4,6 @@ from src.tasks.domain.models import TaskModel, TaskAssociationModel
 from src.tasks.entrypoints.schemas import UserTasksStatisticsResponseScheme
 from src.tasks.interfaces.units_of_work import TasksUnitOfWork
 from src.tasks.service_layer.service import TasksService
-from src.users.domain.models import UserModel
 
 
 class TasksViews:
@@ -25,13 +24,13 @@ class TasksViews:
         # Return only not archived tasks:
         return [task for task in tasks if not task.is_archived]
 
-    async def get_user_tasks_statistics(self, user: UserModel) -> List[UserTasksStatisticsResponseScheme]:
+    async def get_user_tasks_statistics(self, user_id: int) -> List[UserTasksStatisticsResponseScheme]:
         tasks_service: TasksService = TasksService(uow=self._uow)
 
         # Only not archived task associations should be processed:
         task_associations: List[TaskAssociationModel] = [
             task_association for task_association in
-            await tasks_service.get_user_tasks_associations(user_id=user.id) if not task_association.task_archived
+            await tasks_service.get_user_tasks_associations(user_id=user_id) if not task_association.task_archived
         ]
 
         return [

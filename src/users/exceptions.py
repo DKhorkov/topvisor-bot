@@ -1,14 +1,18 @@
 from src.users.constants import ErrorDetails
-from src.core.exceptions import DetailedHTTPException
+from src.core.exceptions import DetailedException
 
 
-class InvalidUserError(DetailedHTTPException):
+class InvalidUserError(DetailedException):
     DETAIL = ErrorDetails.INVALID_USER
 
 
-class UserAlreadyExistsError(DetailedHTTPException):
+class UserAlreadyExistsError(DetailedException):
     DETAIL = ErrorDetails.USER_ALREADY_EXISTS
 
 
-class UserNotFoundError(DetailedHTTPException):
+class UserNotFoundError(DetailedException):
     DETAIL = ErrorDetails.USER_NOT_FOUND
+
+
+class UserHasNoPermissionsError(DetailedException):
+    DETAIL = ErrorDetails.USER_HAS_NO_PERMISSIONS

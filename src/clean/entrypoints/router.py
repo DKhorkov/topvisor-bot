@@ -1,7 +1,6 @@
 from aiogram import Router
 from aiogram.types import Message
 
-
 clean_router: Router = Router()
 
 

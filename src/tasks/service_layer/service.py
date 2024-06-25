@@ -1,4 +1,4 @@
-from typing import Optional, List
+from typing import Optional, List, Set
 
 from src.tasks.constants import ErrorDetails
 from src.tasks.domain.models import TaskModel, TaskAssociationModel
@@ -85,3 +85,45 @@ class TasksService:
             ] = await uow.tasks_associations.get_associated_tasks_by_user_id(user_id=user_id)
 
             return task_associations
+
+    async def archive_old_tasks(self, new_tasks: List[TaskModel]) -> None:
+        new_tasks_descriptions: Set[str] = {task.description for task in new_tasks}
+        async with self._uow as uow:
+            for task in await uow.tasks.list():
+                if not (task.is_archived or task.description in new_tasks_descriptions):
+                    task.is_archived = True
+
+                    task_associations: List[
+                        TaskAssociationModel
+                    ] = await uow.tasks_associations.get_associated_tasks_by_task_id(task_id=task.id)
+
+                    for task_association in task_associations:
+                        task_association.task_archived = True
+
+                    await uow.commit()
+
+    async def get_task_by_description(self, description: str) -> TaskModel:
+        async with self._uow as uow:
+            task: Optional[TaskModel] = await uow.tasks.get_by_description(description=description)
+            if not task:
+                raise TaskNotFoundError
+
+            return task
+
+    async def reopen_task(self, id: int) -> TaskModel:
+        async with self._uow as uow:
+            task: Optional[TaskModel] = await uow.tasks.get(id=id)
+            if not task:
+                raise TaskNotFoundError
+
+            task.is_archived = False
+
+            task_associations: List[
+                TaskAssociationModel
+            ] = await uow.tasks_associations.get_associated_tasks_by_task_id(task_id=task.id)
+
+            for task_association in task_associations:
+                task_association.task_archived = False
+
+            await uow.commit()
+            return task

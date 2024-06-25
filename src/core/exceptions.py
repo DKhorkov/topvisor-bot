@@ -1,4 +1,4 @@
-class DetailedHTTPException(Exception):
+class DetailedException(Exception):
     DETAIL: str = 'Error'
 
     def __init__(self, *args, **kwargs) -> None:

@@ -12,6 +12,7 @@ class ErrorDetails:
     USER_ALREADY_EXISTS: str = 'User with provided credentials already exists'
     USER_NOT_FOUND: str = 'User with provided credentials not found'
     USER_ATTRIBUTE_REQUIRED: str = 'user id, email or username is required'
+    USER_HAS_NO_PERMISSIONS: str = 'User has no permissions for current operation'
 
 
 @dataclass(frozen=True)

@@ -8,7 +8,7 @@ tasks_table = Table(
     'tasks',
     mapper_registry.metadata,
     Column('id', Integer, autoincrement=True, primary_key=True, nullable=False, unique=True),
-    Column('description', String, nullable=False),
+    Column('description', String, nullable=False, unique=True),
     Column('is_archived', Boolean, nullable=False, default=False),
     Column('created_at', DateTime(timezone=True), nullable=False, default=datetime.now(tz=timezone.utc)),
     Column(

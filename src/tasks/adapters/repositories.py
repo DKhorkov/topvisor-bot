@@ -19,7 +19,7 @@ class SQLAlchemyTasksRepository(SQLAlchemyAbstractRepository, TasksRepository):
 
     async def add(self, model: AbstractModel) -> TaskModel:
         result: Result = await self._session.execute(
-            insert(TaskModel).values(**await model.to_dict()).returning(TaskModel)
+            insert(TaskModel).values(**await model.to_dict(exclude={'id'})).returning(TaskModel)
         )
 
         return result.scalar_one()
@@ -61,7 +61,7 @@ class SQLAlchemyTasksAssociationsRepository(SQLAlchemyAbstractRepository, TasksA
 
     async def add(self, model: AbstractModel) -> TaskAssociationModel:
         result: Result = await self._session.execute(
-            insert(TaskAssociationModel).values(**await model.to_dict()).returning(TaskAssociationModel)
+            insert(TaskAssociationModel).values(**await model.to_dict(exclude={'id'})).returning(TaskAssociationModel)
         )
 
         return result.scalar_one()
