@@ -116,7 +116,18 @@ coverage html
 ```
 
 
-### Create or update tasks for challenge
+## Create or update tasks for challenge
 
 To create or update tasks for challenge, user with admin privileges should send a YAML file with tasks,
 similarly to ```src/tasks/CREATE_TASKS_EXAMPLE_FILE.yaml```
+
+
+## Bot commands:
+
+#### Common commands:
+```/start``` - start message<br>
+```/help``` - get help message<br>
+```/my_stats``` - get stats for current user<br>
+
+#### Admins commands:
+```/logs``` - get bot logs<br>

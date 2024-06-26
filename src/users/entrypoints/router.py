@@ -10,7 +10,7 @@ users_router: Router = Router()
 
 
 @users_router.message(CommandStart())
-async def command_start_handler(message: Message) -> None:
+async def start_handler(message: Message) -> None:
     """
     This handler receives messages with `/start` command
     """

@@ -71,11 +71,13 @@ class TasksService:
                 await uow.tasks_associations.add(
                     model=TaskAssociationModel(
                         user_id=user.id,
-                        task_id=task.id
+                        task_id=task.id,
+                        task_archived=task.is_archived
                     )
                 ) for task in await uow.tasks.list()
             ]
 
+            await uow.commit()
             return task_associations
 
     async def get_user_tasks_associations(self, user_id: int) -> List[TaskAssociationModel]:
