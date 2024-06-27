@@ -24,7 +24,7 @@ class UserRoles:
 @dataclass(frozen=True)
 class AdminsIds:
     D3M0S666: int = 415749541
-    elizlisian: str = 367790380
+    elizlisian: int = 367790380
 
     def tuple(self) -> Tuple[Any, ...]:
         return astuple(self)
