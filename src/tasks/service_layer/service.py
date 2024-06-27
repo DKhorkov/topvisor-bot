@@ -2,7 +2,7 @@ from typing import Optional, List, Set
 
 from src.tasks.constants import ErrorDetails
 from src.tasks.domain.models import TaskModel, TaskAssociationModel
-from src.tasks.exceptions import TaskNotFoundError
+from src.tasks.exceptions import TaskNotFoundError, TaskAssociationNotFoundError
 from src.tasks.interfaces.units_of_work import TasksUnitOfWork
 from src.users.domain.models import UserModel
 
@@ -129,3 +129,23 @@ class TasksService:
 
             await uow.commit()
             return task
+
+    async def get_task_by_association_id(self, task_association_id: int) -> TaskModel:
+        async with self._uow as uow:
+            task_association: Optional[TaskAssociationModel] = await uow.tasks_associations.get(id=task_association_id)
+            if not task_association:
+                raise TaskAssociationNotFoundError
+
+            task: Optional[TaskModel] = await uow.tasks.get(id=task_association.task_id)
+            if not task:
+                raise TaskNotFoundError
+
+            return task
+
+    async def get_task_association_by_id(self, task_association_id: int) -> TaskAssociationModel:
+        async with self._uow as uow:
+            task_association: Optional[TaskAssociationModel] = await uow.tasks_associations.get(id=task_association_id)
+            if not task_association:
+                raise TaskAssociationNotFoundError
+
+            return task_association

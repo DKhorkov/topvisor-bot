@@ -10,6 +10,8 @@ class UserModel(AbstractModel):
     is_bot: bool
     first_name: str
     role: str
+    full_name: str
+    url: str
     last_name: Optional[str] = None
     username: Optional[str] = None
 

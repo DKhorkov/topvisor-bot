@@ -1,5 +1,5 @@
-from dataclasses import dataclass
-from typing import List
+from dataclasses import dataclass, astuple
+from typing import Tuple, Any
 
 
 @dataclass(frozen=True)
@@ -21,4 +21,10 @@ class UserRoles:
     DEFAULT: str = 'default'
 
 
-ADMINS_TELEGRAM_IDS: List[int] = [415749541, 367790380]
+@dataclass(frozen=True)
+class AdminsIds:
+    D3M0S666: int = 415749541
+    elizlisian: str = 367790380
+
+    def tuple(self) -> Tuple[Any, ...]:
+        return astuple(self)

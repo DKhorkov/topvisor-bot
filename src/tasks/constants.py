@@ -17,3 +17,13 @@ class ErrorDetails:
 @dataclass(frozen=True)
 class CommandNames:
     USER_TASKS_STATISTICS: str = 'my_stats'
+    COMPLETE_TASK: str = 'complete_task'
+
+
+@dataclass(frozen=True)
+class ConfirmTaskCompletenessData:
+    START_TEXT: str = 'Подтверждение выполнения задачи:'
+    TASK_ASSOCIATION_ID_TEXT: str = 'UID:'
+
+
+MARKUP_MAX_LENGTH: int = 1

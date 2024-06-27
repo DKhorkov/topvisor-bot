@@ -10,6 +10,8 @@ users_table = Table(
     Column('id', BigInteger, primary_key=True, nullable=False, unique=True),
     Column('is_bot', Boolean, nullable=False),
     Column('first_name', String, nullable=False),
+    Column('full_name', String, nullable=False),
+    Column('url', String, nullable=False),
     Column('last_name', String, nullable=True),
     Column('username', String, nullable=True),
     Column('role', String, nullable=False),

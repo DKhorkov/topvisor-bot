@@ -128,6 +128,7 @@ similarly to ```src/tasks/CREATE_TASKS_EXAMPLE_FILE.yaml```
 ```/start``` - start message<br>
 ```/help``` - get help message<br>
 ```/my_stats``` - get stats for current user<br>
+```/complete_task``` - start procedure of confirming task completeness<br>
 
 #### Admins commands:
 ```/logs``` - get bot logs<br>
