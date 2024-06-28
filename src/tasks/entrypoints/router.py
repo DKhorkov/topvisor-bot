@@ -4,24 +4,21 @@ from aiogram.types import Message, CallbackQuery
 from typing import List
 
 from src.tasks.domain.models import TaskModel
-from src.tasks.entrypoints.callback_data import CompleteTaskCallbackData, CallbackActions
+from src.tasks.entrypoints.callback_data import CompleteTaskCallbackData, ConfirmTaskCompletenessCallbackData
 from src.tasks.entrypoints.dependencies import (
     get_user_tasks_statistics,
     update_tasks,
     get_user_active_tasks,
     get_task_by_association_id,
-    get_user_by_association_id
+    send_task_on_confirmation, set_task_competed_for_user
 )
-from src.tasks.constants import CommandNames, ConfirmTaskCompletenessData
+from src.tasks.constants import CommandNames, ConfirmTaskCompletenessData, CallbackDataActions
 from src.tasks.entrypoints.schemas import (
     UserTaskStatisticsResponseScheme,
     UserActiveTaskScheme
 )
 from src.tasks.entrypoints.templates import TemplateCreator
 from src.tasks.entrypoints.markups import MarkupCreator
-from src.tasks.entrypoints.utils import get_substring_after_chars
-from src.users.constants import AdminsIds
-from src.users.domain.models import UserModel
 
 tasks_router: Router = Router()
 
@@ -47,22 +44,40 @@ async def complete_task_handler(message: Message) -> None:
     )
 
 
-@tasks_router.callback_query(CompleteTaskCallbackData.filter(F.action == CallbackActions.complete_task))
-async def confirm_completed_task_handler(
+@tasks_router.callback_query(CompleteTaskCallbackData.filter(F.action == CallbackDataActions.COMPLETE_TASK))
+async def prove_completed_task_handler(
         query: CallbackQuery,
         callback_data: CompleteTaskCallbackData,
         bot: Bot
 ) -> None:
+
     assert query.message is not None
     await bot.delete_message(chat_id=query.message.chat.id, message_id=query.message.message_id)
     task: TaskModel = await get_task_by_association_id(task_association_id=callback_data.task_association_id)
     await bot.send_message(
         chat_id=query.message.chat.id,
-        text=await TemplateCreator.confirm_completed_task_message(
+        text=await TemplateCreator.prove_completed_task_message(
             task=task,
             task_association_id=callback_data.task_association_id
         )
     )
+
+
+@tasks_router.callback_query(
+    ConfirmTaskCompletenessCallbackData.filter(F.action == CallbackDataActions.CONFIRM_TASK_COMPLETENESS)
+)
+async def confirm_task_completeness_handler(
+        query: CallbackQuery,
+        callback_data: ConfirmTaskCompletenessCallbackData
+) -> None:
+
+    await set_task_competed_for_user(task_association_id=callback_data.task_association_id)
+
+    assert query.message is not None
+    assert isinstance(query.message, Message)
+    await query.message.delete_reply_markup()
+
+    await query.answer(text=await TemplateCreator.task_completeness_confirmed_message())
 
 
 @tasks_router.message(
@@ -74,27 +89,7 @@ async def photo_task_confirmation_handler(message: Message, bot: Bot) -> None:
     assert message.reply_to_message is not None
     await message.reply_to_message.delete()
 
-    assert message.reply_to_message.text is not None
-    task_association_id: int = int(
-        await get_substring_after_chars(
-            string=message.reply_to_message.text,
-            chars=ConfirmTaskCompletenessData.TASK_ASSOCIATION_ID_TEXT
-        )
-    )
-
-    assert message.photo is not None
-    task: TaskModel = await get_task_by_association_id(task_association_id=task_association_id)
-    user: UserModel = await get_user_by_association_id(task_association_id=task_association_id)
-    for admin_id in AdminsIds().tuple():
-        await bot.send_photo(
-            chat_id=admin_id,
-            caption=await TemplateCreator.to_admin_task_confirmation_message(
-                task=task,
-                user=user
-            ),
-            photo=message.photo[-1].file_id,  # the most quality photo
-        )
-
+    task: TaskModel = await send_task_on_confirmation(message=message, bot=bot)
     await message.answer(text=await TemplateCreator.task_sent_on_confirmation_message(task=task))
 
 

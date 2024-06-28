@@ -149,3 +149,15 @@ class TasksService:
                 raise TaskAssociationNotFoundError
 
             return task_association
+
+    async def set_task_association_completed_status(self, task_association_id: int) -> TaskAssociationModel:
+        async with self._uow as uow:
+            task_association: Optional[TaskAssociationModel] = await uow.tasks_associations.get(id=task_association_id)
+            if not task_association:
+                raise TaskAssociationNotFoundError
+
+            if not task_association.task_archived and not task_association.task_completed:
+                task_association.task_completed = True
+                await uow.commit()
+
+            return task_association

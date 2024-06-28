@@ -1,4 +1,15 @@
 from dataclasses import dataclass
+from enum import Enum
+
+
+class CallbackDataActions(str, Enum):
+    COMPLETE_TASK: str = 'complete_task'
+    CONFIRM_TASK_COMPLETENESS: str = 'confirm_task_completeness'
+
+
+@dataclass(frozen=True)
+class MarkupButtons:
+    CONFIRM_TASK_COMPLETENESS: str = 'confirm_task_completeness'
 
 
 @dataclass(frozen=True)

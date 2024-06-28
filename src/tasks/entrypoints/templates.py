@@ -31,7 +31,7 @@ class TemplateCreator:
         return 'Please, select task, which you completeness you want to confirm:'
 
     @staticmethod
-    async def confirm_completed_task_message(task: TaskModel, task_association_id: int) -> str:
+    async def prove_completed_task_message(task: TaskModel, task_association_id: int) -> str:
         return (
             f'{ConfirmTaskCompletenessData.START_TEXT}\n\n'
             f'To complete task "{html.bold(task.description)}", please send a photo replying to this message!\n\n'
@@ -49,3 +49,7 @@ class TemplateCreator:
             f'Here is provided photo.\n'
             f'Confirm task completeness?'
         )
+
+    @staticmethod
+    async def task_completeness_confirmed_message() -> str:
+        return 'Task completeness was successfully confirmed!'
