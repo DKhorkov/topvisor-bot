@@ -15,6 +15,7 @@ exclude = ['database_data/', 'database_backups/', 'alembic/']
 module = [
     "src.users.interfaces.repositories",
     "src.users.adapters.repositories",
+    "tests.users.fake_objects",
     "src.tasks.interfaces.repositories",
     "src.tasks.adapters.repositories",
 ]

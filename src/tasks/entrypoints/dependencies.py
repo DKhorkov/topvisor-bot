@@ -105,7 +105,7 @@ async def send_task_on_confirmation(message: Message, bot: Bot) -> TaskModel:
     assert message.reply_to_message is not None
     assert message.reply_to_message.text is not None
     task_association_id: int = int(
-        await get_substring_after_chars(
+        get_substring_after_chars(
             string=message.reply_to_message.text,
             chars=ConfirmTaskCompletenessData.TASK_ASSOCIATION_ID_TEXT
         )
