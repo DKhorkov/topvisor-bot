@@ -11,7 +11,7 @@ from src.core.database.metadata import metadata
 from src.users.adapters.orm import start_mappers as start_users_mappers
 from src.tasks.adapters.orm import start_mappers as start_tasks_mappers
 from src.tasks.domain.models import TaskModel, TaskAssociationModel
-from tests.config import FakeUserConfig, FakeTaskConfig, FakeMessageConfig
+from tests.config import FakeUserConfig, FakeTaskConfig, FakeMessageConfig, FakeTaskAssociationConfig
 from tests.utils import drop_test_db
 
 
@@ -72,8 +72,7 @@ async def create_test_task(create_test_user: None) -> None:
                 insert(
                     TaskAssociationModel
                 ).values(
-                    task_id=FakeTaskConfig.ID,
-                    user_id=FakeUserConfig.ID
+                    **FakeTaskAssociationConfig().to_dict(to_lower=True)
                 )
             )
             await conn.commit()

@@ -36,6 +36,15 @@ class FakeTaskConfig(BaseTestConfig):
 
 
 @dataclass
+class FakeTaskAssociationConfig(BaseTestConfig):
+    ID: int = 1
+    TASK_ID: int = 1
+    USER_ID: int = 1
+    TASK_ARCHIVED: bool = False
+    TASK_COMPLETED: bool = False
+
+
+@dataclass
 class FakeChatConfig(BaseTestConfig):
     ID: int = 1
     TYPE: str = 'private'

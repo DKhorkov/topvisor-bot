@@ -102,7 +102,7 @@ class SQLAlchemyTasksAssociationsRepository(SQLAlchemyAbstractRepository, TasksA
 
         return task_associations
 
-    async def get_associated_tasks_by_task_id(self, task_id: int) -> List[TaskAssociationModel]:
+    async def get_task_associations_by_task_id(self, task_id: int) -> List[TaskAssociationModel]:
         result: Result = await self._session.execute(select(TaskAssociationModel).filter_by(task_id=task_id))
         task_associations: Sequence[Row | RowMapping | Any] = result.scalars().all()
 
@@ -112,7 +112,7 @@ class SQLAlchemyTasksAssociationsRepository(SQLAlchemyAbstractRepository, TasksA
 
         return task_associations
 
-    async def get_associated_tasks_by_user_id(self, user_id: int) -> List[TaskAssociationModel]:
+    async def get_tasks_associations_by_user_id(self, user_id: int) -> List[TaskAssociationModel]:
         result: Result = await self._session.execute(select(TaskAssociationModel).filter_by(user_id=user_id))
         task_associations: Sequence[Row | RowMapping | Any] = result.scalars().all()
 

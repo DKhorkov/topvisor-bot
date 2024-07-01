@@ -84,7 +84,7 @@ class TasksService:
         async with self._uow as uow:
             task_associations: List[
                 TaskAssociationModel
-            ] = await uow.tasks_associations.get_associated_tasks_by_user_id(user_id=user_id)
+            ] = await uow.tasks_associations.get_tasks_associations_by_user_id(user_id=user_id)
 
             return task_associations
 
@@ -97,7 +97,7 @@ class TasksService:
 
                     task_associations: List[
                         TaskAssociationModel
-                    ] = await uow.tasks_associations.get_associated_tasks_by_task_id(task_id=task.id)
+                    ] = await uow.tasks_associations.get_task_associations_by_task_id(task_id=task.id)
 
                     for task_association in task_associations:
                         task_association.task_archived = True
@@ -122,7 +122,7 @@ class TasksService:
 
             task_associations: List[
                 TaskAssociationModel
-            ] = await uow.tasks_associations.get_associated_tasks_by_task_id(task_id=task.id)
+            ] = await uow.tasks_associations.get_task_associations_by_task_id(task_id=task.id)
 
             for task_association in task_associations:
                 task_association.task_archived = False

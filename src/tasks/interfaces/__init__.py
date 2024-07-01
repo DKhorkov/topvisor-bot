@@ -1,2 +1,2 @@
-from src.users.interfaces.units_of_work import UsersUnitOfWork
-from src.users.interfaces.repositories import UsersRepository
+from src.tasks.interfaces.units_of_work import TasksUnitOfWork
+from src.tasks.interfaces.repositories import TasksRepository, TasksAssociationsRepository

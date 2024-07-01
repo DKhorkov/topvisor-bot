@@ -57,9 +57,9 @@ class TasksAssociationsRepository(AbstractRepository, ABC):
         raise NotImplementedError
 
     @abstractmethod
-    async def get_associated_tasks_by_task_id(self, task_id: int) -> List[TaskAssociationModel]:
+    async def get_task_associations_by_task_id(self, task_id: int) -> List[TaskAssociationModel]:
         raise NotImplementedError
 
     @abstractmethod
-    async def get_associated_tasks_by_user_id(self, user_id: int) -> List[TaskAssociationModel]:
+    async def get_tasks_associations_by_user_id(self, user_id: int) -> List[TaskAssociationModel]:
         raise NotImplementedError

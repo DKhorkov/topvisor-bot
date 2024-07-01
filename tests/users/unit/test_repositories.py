@@ -10,7 +10,7 @@ from tests.config import FakeUserConfig
 
 
 @pytest.mark.anyio
-async def test_sqlalchemy_user_repository_get_success(
+async def test_sqlalchemy_users_repository_get_success(
         create_test_user: None,
         async_connection: AsyncConnection
 ) -> None:
@@ -26,19 +26,19 @@ async def test_sqlalchemy_user_repository_get_success(
 
 
 @pytest.mark.anyio
-async def test_sqlalchemy_user_repository_get_fail(
-        create_test_user: None,
+async def test_sqlalchemy_users_repository_get_fail(
+        map_models_to_orm: None,
         async_connection: AsyncConnection
 ) -> None:
 
     async_session_factory: async_sessionmaker = async_sessionmaker(bind=async_connection)
     session: AsyncSession = async_session_factory()
-    user: Optional[UserModel] = await SQLAlchemyUsersRepository(session=session).get(id=2)
+    user: Optional[UserModel] = await SQLAlchemyUsersRepository(session=session).get(id=FakeUserConfig.ID)
     assert user is None
 
 
 @pytest.mark.anyio
-async def test_sqlalchemy_user_repository_get_by_first_name_success(
+async def test_sqlalchemy_users_repository_get_by_first_name_success(
         create_test_user: None,
         async_connection: AsyncConnection
 ) -> None:
@@ -56,22 +56,22 @@ async def test_sqlalchemy_user_repository_get_by_first_name_success(
 
 
 @pytest.mark.anyio
-async def test_sqlalchemy_user_repository_get_by_first_name_fail(
-        create_test_user: None,
+async def test_sqlalchemy_users_repository_get_by_first_name_fail(
+        map_models_to_orm: None,
         async_connection: AsyncConnection
 ) -> None:
 
     async_session_factory: async_sessionmaker = async_sessionmaker(bind=async_connection)
     session: AsyncSession = async_session_factory()
     user: Optional[UserModel] = await SQLAlchemyUsersRepository(session=session).get_by_first_name(
-        first_name='TestUser'
+        first_name=FakeUserConfig.FIRST_NAME
     )
 
     assert user is None
 
 
 @pytest.mark.anyio
-async def test_sqlalchemy_user_repository_get_by_username_success(
+async def test_sqlalchemy_users_repository_get_by_username_success(
         create_test_user: None,
         async_connection: AsyncConnection
 ) -> None:
@@ -89,22 +89,22 @@ async def test_sqlalchemy_user_repository_get_by_username_success(
 
 
 @pytest.mark.anyio
-async def test_sqlalchemy_user_repository_get_by_username_fail(
-        create_test_user: None,
+async def test_sqlalchemy_users_repository_get_by_username_fail(
+        map_models_to_orm: None,
         async_connection: AsyncConnection
 ) -> None:
 
     async_session_factory: async_sessionmaker = async_sessionmaker(bind=async_connection)
     session: AsyncSession = async_session_factory()
     user: Optional[UserModel] = await SQLAlchemyUsersRepository(session=session).get_by_username(
-        username='non-existing-username'
+        username=FakeUserConfig.USERNAME
     )
 
     assert user is None
 
 
 @pytest.mark.anyio
-async def test_sqlalchemy_user_repository_list(
+async def test_sqlalchemy_users_repository_list(
         create_test_user: None,
         async_connection: AsyncConnection
 ) -> None:
@@ -121,7 +121,7 @@ async def test_sqlalchemy_user_repository_list(
 
 
 @pytest.mark.anyio
-async def test_sqlalchemy_user_repository_empty_list(
+async def test_sqlalchemy_users_repository_empty_list(
         map_models_to_orm: None,
         async_connection: AsyncConnection
 ) -> None:
@@ -133,7 +133,7 @@ async def test_sqlalchemy_user_repository_empty_list(
 
 
 @pytest.mark.anyio
-async def test_sqlalchemy_user_repository_delete_existing_user(
+async def test_sqlalchemy_users_repository_delete_existing_user(
         create_test_user: None,
         async_connection: AsyncConnection
 ) -> None:
@@ -152,7 +152,7 @@ async def test_sqlalchemy_user_repository_delete_existing_user(
 
 
 @pytest.mark.anyio
-async def test_sqlalchemy_user_repository_delete_non_existing_user(
+async def test_sqlalchemy_users_repository_delete_non_existing_user(
         map_models_to_orm: None,
         async_connection: AsyncConnection
 ) -> None:
@@ -167,7 +167,7 @@ async def test_sqlalchemy_user_repository_delete_non_existing_user(
 
 
 @pytest.mark.anyio
-async def test_sqlalchemy_user_repository_add_user_success(
+async def test_sqlalchemy_users_repository_add_user_success(
         map_models_to_orm: None,
         async_connection: AsyncConnection
 ) -> None:
@@ -187,7 +187,7 @@ async def test_sqlalchemy_user_repository_add_user_success(
 
 
 @pytest.mark.anyio
-async def test_sqlalchemy_user_repository_add_user_fail_id_already_exists(
+async def test_sqlalchemy_users_repository_add_user_fail_id_already_exists(
         create_test_user: None,
         async_connection: AsyncConnection
 ) -> None:
@@ -204,7 +204,7 @@ async def test_sqlalchemy_user_repository_add_user_fail_id_already_exists(
 
 
 @pytest.mark.anyio
-async def test_sqlalchemy_user_repository_update_existing_user(
+async def test_sqlalchemy_users_repository_update_existing_user(
         create_test_user: None,
         async_connection: AsyncConnection
 ) -> None:
@@ -228,7 +228,7 @@ async def test_sqlalchemy_user_repository_update_existing_user(
 
 
 @pytest.mark.anyio
-async def test_sqlalchemy_user_repository_update_non_existing_user(
+async def test_sqlalchemy_users_repository_update_non_existing_user(
         map_models_to_orm: None,
         async_connection: AsyncConnection
 ) -> None:

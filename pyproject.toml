@@ -18,6 +18,7 @@ module = [
     "tests.users.fake_objects",
     "src.tasks.interfaces.repositories",
     "src.tasks.adapters.repositories",
+    "tests.tasks.fake_objects",
 ]
 disable_error_code = ["override"]
 
