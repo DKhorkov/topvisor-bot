@@ -60,6 +60,14 @@ class TasksService:
 
             return task
 
+    async def get_task_by_description(self, description: str) -> TaskModel:
+        async with self._uow as uow:
+            task: Optional[TaskModel] = await uow.tasks.get_by_description(description=description)
+            if not task:
+                raise TaskNotFoundError
+
+            return task
+
     async def get_all_tasks(self) -> List[TaskModel]:
         async with self._uow as uow:
             tasks: List[TaskModel] = await uow.tasks.list()
@@ -103,14 +111,6 @@ class TasksService:
                         task_association.task_archived = True
 
                     await uow.commit()
-
-    async def get_task_by_description(self, description: str) -> TaskModel:
-        async with self._uow as uow:
-            task: Optional[TaskModel] = await uow.tasks.get_by_description(description=description)
-            if not task:
-                raise TaskNotFoundError
-
-            return task
 
     async def reopen_task(self, id: int) -> TaskModel:
         async with self._uow as uow:
