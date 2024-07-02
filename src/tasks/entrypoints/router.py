@@ -3,6 +3,7 @@ from aiogram.filters import Command
 from aiogram.types import Message, CallbackQuery
 from typing import List
 
+from src.core.utils import get_substring_after_chars
 from src.tasks.domain.models import TaskModel
 from src.tasks.entrypoints.callback_data import CompleteTaskCallbackData, ConfirmTaskCompletenessCallbackData
 from src.tasks.entrypoints.dependencies import (
@@ -10,15 +11,16 @@ from src.tasks.entrypoints.dependencies import (
     update_tasks,
     get_user_active_tasks,
     get_task_by_association_id,
-    send_task_on_confirmation, set_task_competed_for_user
+    set_task_competed_for_user
 )
-from src.tasks.constants import CommandNames, ConfirmTaskCompletenessData, CallbackDataActions
+from src.tasks.constants import CommandNames, ConfirmTaskCompletenessData, CallbackDataActions, MessageFileTypes
 from src.tasks.entrypoints.schemas import (
     UserTaskStatisticsResponseScheme,
     UserActiveTaskScheme
 )
 from src.tasks.entrypoints.templates import TemplateCreator
 from src.tasks.entrypoints.markups import MarkupCreator
+from src.tasks.entrypoints.utils import get_new_tasks_from_message, send_task_on_confirmation
 
 tasks_router: Router = Router()
 
@@ -38,10 +40,13 @@ async def user_tasks_statistics_handler(message: Message) -> None:
 async def complete_task_handler(message: Message) -> None:
     await message.delete()
     user_active_tasks: List[UserActiveTaskScheme] = await get_user_active_tasks(message=message)
-    await message.answer(
-        text=await TemplateCreator.complete_task_message(),
-        reply_markup=await MarkupCreator.complete_task_markup(tasks=user_active_tasks)
-    )
+    if not user_active_tasks:
+        await message.answer(text=await TemplateCreator.all_tasks_already_completed_by_user())
+    else:
+        await message.answer(
+            text=await TemplateCreator.complete_task_message(),
+            reply_markup=await MarkupCreator.complete_task_markup(tasks=user_active_tasks)
+        )
 
 
 @tasks_router.callback_query(CompleteTaskCallbackData.filter(F.action == CallbackDataActions.COMPLETE_TASK))
@@ -81,7 +86,7 @@ async def confirm_task_completeness_handler(
 
 
 @tasks_router.message(
-    F.content_type.in_({'photo'}),
+    F.content_type.in_({MessageFileTypes.PHOTO}),
     F.reply_to_message.text.startswith(ConfirmTaskCompletenessData.START_TEXT)
 )
 async def photo_task_confirmation_handler(message: Message, bot: Bot) -> None:
@@ -89,16 +94,28 @@ async def photo_task_confirmation_handler(message: Message, bot: Bot) -> None:
     assert message.reply_to_message is not None
     await message.reply_to_message.delete()
 
-    task: TaskModel = await send_task_on_confirmation(message=message, bot=bot)
+    assert message.reply_to_message is not None
+    assert message.reply_to_message.text is not None
+    task_association_id: int = int(
+        get_substring_after_chars(
+            string=message.reply_to_message.text,
+            chars=ConfirmTaskCompletenessData.TASK_ASSOCIATION_ID_TEXT
+        )
+    )
+
+    task: TaskModel = await get_task_by_association_id(task_association_id=task_association_id)
+    await send_task_on_confirmation(message=message, task_association_id=task_association_id, task=task, bot=bot)
+
     await message.answer(text=await TemplateCreator.task_sent_on_confirmation_message(task=task))
 
 
-@tasks_router.message(F.content_type.in_({'document'}))
+@tasks_router.message(F.content_type.in_({MessageFileTypes.DOCUMENT}))
 async def update_tasks_handler(message: Message, bot: Bot) -> None:
     await message.delete()
-    tasks: List[TaskModel] = await update_tasks(message=message, bot=bot)
+    new_tasks: List[TaskModel] = await get_new_tasks_from_message(message=message, bot=bot)
+    updated_tasks: List[TaskModel] = await update_tasks(tasks=new_tasks)
     await message.answer(
         text=await TemplateCreator.tasks_updated_message(
-            tasks=tasks
+            tasks=updated_tasks
         )
     )

@@ -19,7 +19,7 @@ class BaseTestConfig:
 
 @dataclass
 class FakeUserConfig(BaseTestConfig):
-    ID: int = 123456
+    ID: int = 1
     IS_BOT: bool = False
     USERNAME: str = 'test_username'
     LAST_NAME: str = 'fake_last_name'
@@ -38,8 +38,8 @@ class FakeTaskConfig(BaseTestConfig):
 @dataclass
 class FakeTaskAssociationConfig(BaseTestConfig):
     ID: int = 1
-    TASK_ID: int = 1
-    USER_ID: int = 1
+    TASK_ID: int = FakeTaskConfig.ID
+    USER_ID: int = FakeUserConfig.ID
     TASK_ARCHIVED: bool = False
     TASK_COMPLETED: bool = False
 

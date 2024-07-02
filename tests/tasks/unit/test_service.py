@@ -22,7 +22,7 @@ async def test_tasks_service_create_task_without_tasks() -> None:
     tasks_associations_repository: TasksAssociationsRepository = (
         await create_fake_tasks_associations_repository_instance()
     )
-    
+
     tasks_unit_of_work: TasksUnitOfWork = FakeTasksUnitOfWork(
         tasks_repository=tasks_repository,
         tasks_associations_repository=tasks_associations_repository

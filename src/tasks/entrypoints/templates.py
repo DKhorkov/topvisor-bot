@@ -53,3 +53,7 @@ class TemplateCreator:
     @staticmethod
     async def task_completeness_confirmed_message() -> str:
         return 'Task completeness was successfully confirmed!'
+
+    @staticmethod
+    async def all_tasks_already_completed_by_user() -> str:
+        return 'You have already completed all tasks!'

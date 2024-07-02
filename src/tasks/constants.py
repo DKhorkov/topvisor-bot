@@ -1,8 +1,15 @@
 from dataclasses import dataclass
 from enum import Enum
+from typing import Tuple
 
 
 class CallbackDataActions(str, Enum):
+    COMPLETE_TASK: str = 'complete_task'
+    CONFIRM_TASK_COMPLETENESS: str = 'confirm_task_completeness'
+
+
+@dataclass(frozen=True)
+class CallbackDataPrefixes:
     COMPLETE_TASK: str = 'complete_task'
     CONFIRM_TASK_COMPLETENESS: str = 'confirm_task_completeness'
 
@@ -37,4 +44,11 @@ class ConfirmTaskCompletenessData:
     TASK_ASSOCIATION_ID_TEXT: str = 'UID:'
 
 
+@dataclass(frozen=True)
+class MessageFileTypes:
+    DOCUMENT: str = 'document'
+    PHOTO: str = 'photo'
+
+
 MARKUP_MAX_LENGTH: int = 1
+UPDATE_TASKS_DOCUMENT_APPROPRIATE_EXTENSIONS: Tuple[str, ...] = ('.yaml', '.yml')
