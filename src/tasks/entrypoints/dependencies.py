@@ -74,6 +74,11 @@ async def get_user_by_association_id(task_association_id: int) -> UserModel:
     return await get_user_by_id(id=task_association.user_id)
 
 
+async def get_task_association_by_id(task_association_id: int) -> TaskAssociationModel:
+    tasks_service: TasksService = TasksService(uow=SQLAlchemyTasksUnitOfWork())
+    return await tasks_service.get_task_association_by_id(task_association_id=task_association_id)
+
+
 async def set_task_competed_for_user(task_association_id: int) -> None:
     tasks_service: TasksService = TasksService(uow=SQLAlchemyTasksUnitOfWork())
     await tasks_service.set_task_association_completed_status(task_association_id=task_association_id)

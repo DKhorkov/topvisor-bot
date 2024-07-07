@@ -35,4 +35,12 @@ class MarkupCreator:
             )
         )
 
+        builder.button(
+            text=MarkupButtons.REJECT_TASK_COMPLETENESS,
+            callback_data=ConfirmTaskCompletenessCallbackData(
+                action=CallbackDataActions.REJECT_TASK_COMPLETENESS,
+                task_association_id=task_association_id
+            )
+        )
+
         return builder.as_markup()

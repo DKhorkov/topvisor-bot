@@ -4,7 +4,7 @@ from typing import List, Optional, BinaryIO
 from aiogram import Bot
 from aiogram.types import Message
 
-from src.tasks.constants import UPDATE_TASKS_DOCUMENT_APPROPRIATE_EXTENSIONS
+from src.tasks.constants import UPDATE_TASKS_DOCUMENT_APPROPRIATE_EXTENSIONS, MessageFileTypes
 from src.tasks.domain.models import TaskModel
 from src.tasks.entrypoints.markups import MarkupCreator
 from src.tasks.entrypoints.templates import TemplateCreator
@@ -39,14 +39,46 @@ async def send_task_on_confirmation(message: Message, bot: Bot, task_association
     assert message.from_user is not None
     user: UserModel = await get_user_by_id(id=message.from_user.id)
 
-    assert message.photo is not None
-    for admin_id in AdminsIds().tuple():
-        await bot.send_photo(
-            chat_id=admin_id,
-            photo=message.photo[-1].file_id,  # the most quality photo
-            reply_markup=await MarkupCreator.confirm_task_completeness_markup(task_association_id=task_association_id),
-            caption=await TemplateCreator.to_admin_task_confirmation_message(
-                task=task,
-                user=user
-            )
-        )
+    match message.content_type:
+        case MessageFileTypes.PHOTO:
+            assert message.photo is not None
+            for admin_id in AdminsIds().tuple():
+                await bot.send_photo(
+                    chat_id=admin_id,
+                    photo=message.photo[-1].file_id,  # the most quality photo
+                    reply_markup=await MarkupCreator.confirm_task_completeness_markup(
+                        task_association_id=task_association_id
+                    ),
+                    caption=await TemplateCreator.to_admin_task_confirmation_message(
+                        task=task,
+                        user=user
+                    )
+                )
+        case MessageFileTypes.DOCUMENT:
+            assert message.document is not None
+            for admin_id in AdminsIds().tuple():
+                await bot.send_document(
+                    chat_id=admin_id,
+                    document=message.document.file_id,
+                    reply_markup=await MarkupCreator.confirm_task_completeness_markup(
+                        task_association_id=task_association_id
+                    ),
+                    caption=await TemplateCreator.to_admin_task_confirmation_message(
+                        task=task,
+                        user=user
+                    )
+                )
+        case MessageFileTypes.VIDEO:
+            assert message.video is not None
+            for admin_id in AdminsIds().tuple():
+                await bot.send_video(
+                    chat_id=admin_id,
+                    video=message.video.file_id,
+                    reply_markup=await MarkupCreator.confirm_task_completeness_markup(
+                        task_association_id=task_association_id
+                    ),
+                    caption=await TemplateCreator.to_admin_task_confirmation_message(
+                        task=task,
+                        user=user
+                    )
+                )

@@ -6,6 +6,7 @@ from typing import Tuple
 class CallbackDataActions(str, Enum):
     COMPLETE_TASK: str = 'complete_task'
     CONFIRM_TASK_COMPLETENESS: str = 'confirm_task_completeness'
+    REJECT_TASK_COMPLETENESS: str = 'reject_task_completeness'
 
 
 @dataclass(frozen=True)
@@ -17,6 +18,7 @@ class CallbackDataPrefixes:
 @dataclass(frozen=True)
 class MarkupButtons:
     CONFIRM_TASK_COMPLETENESS: str = 'confirm_task_completeness'
+    REJECT_TASK_COMPLETENESS: str = 'reject_task_completeness'
 
 
 @dataclass(frozen=True)
@@ -48,6 +50,7 @@ class ConfirmTaskCompletenessData:
 class MessageFileTypes:
     DOCUMENT: str = 'document'
     PHOTO: str = 'photo'
+    VIDEO: str = 'video'
 
 
 MARKUP_MAX_LENGTH: int = 1

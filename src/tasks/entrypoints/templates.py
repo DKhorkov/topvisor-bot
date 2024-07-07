@@ -51,9 +51,27 @@ class TemplateCreator:
         )
 
     @staticmethod
-    async def task_completeness_confirmed_message() -> str:
+    async def task_completeness_confirmed_query_answer() -> str:
         return 'Task completeness was successfully confirmed!'
+
+    @staticmethod
+    async def task_completeness_confirmed_message(task: TaskModel, admin: UserModel) -> str:
+        return (f'Completeness of task "{html.bold(task.description)}" was successfully confirmed by '
+                f'{admin.username} ({admin.url}).!')
+
+    @staticmethod
+    async def task_completeness_rejected_query_answer() -> str:
+        return 'Task completeness was rejected!'
+
+    @staticmethod
+    async def task_completeness_rejected_message(task: TaskModel, admin: UserModel) -> str:
+        return (f'Completeness of task "{html.bold(task.description)}" was rejected by '
+                f'{admin.username} ({admin.url}).!')
 
     @staticmethod
     async def all_tasks_already_completed_by_user() -> str:
         return 'You have already completed all tasks!'
+
+    @staticmethod
+    async def task_completeness_was_already_confirmed_by_another_admin_query_answer() -> str:
+        return 'Task completeness was already confirmed by another admin!'

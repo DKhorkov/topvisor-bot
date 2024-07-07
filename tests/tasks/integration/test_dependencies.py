@@ -16,7 +16,8 @@ from src.tasks.entrypoints.dependencies import (
     get_user_active_tasks,
     get_task_by_association_id,
     get_user_by_association_id,
-    set_task_competed_for_user
+    set_task_competed_for_user,
+    get_task_association_by_id
 )
 
 
@@ -278,6 +279,16 @@ async def test_get_task_by_association_id_success(create_test_task: None) -> Non
 
     assert task.id == FakeTaskConfig.ID
     assert task.description == FakeTaskConfig.DESCRIPTION
+
+
+@pytest.mark.anyio
+async def test_get_task_association_by_id_success(create_test_task: None) -> None:
+    task_association: TaskAssociationModel = await get_task_association_by_id(
+        task_association_id=FakeTaskAssociationConfig.ID
+    )
+
+    assert task_association.id == FakeTaskAssociationConfig.ID
+    assert task_association.user_id == FakeTaskAssociationConfig.USER_ID
 
 
 @pytest.mark.anyio

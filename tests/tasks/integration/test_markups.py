@@ -38,12 +38,20 @@ async def test_markup_creator_confirm_task_completeness_markup() -> None:
         task_association_id=FakeTaskAssociationConfig.ID
     )
 
-    assert len(confirm_task_completeness_markup.inline_keyboard) == 1
+    assert len(confirm_task_completeness_markup.inline_keyboard) == 2
 
-    button: InlineKeyboardButton = confirm_task_completeness_markup.inline_keyboard[0][0]
-    assert button.text == MarkupButtons.CONFIRM_TASK_COMPLETENESS
-    assert button.callback_data == (
+    confirm_button: InlineKeyboardButton = confirm_task_completeness_markup.inline_keyboard[0][0]
+    assert confirm_button.text == MarkupButtons.CONFIRM_TASK_COMPLETENESS
+    assert confirm_button.callback_data == (
         f'{CallbackDataPrefixes.CONFIRM_TASK_COMPLETENESS}:'
         f'{CallbackDataActions.CONFIRM_TASK_COMPLETENESS.value}:'
+        f'{FakeTaskAssociationConfig.ID}'
+    )
+
+    reject_button: InlineKeyboardButton = confirm_task_completeness_markup.inline_keyboard[1][0]
+    assert reject_button.text == MarkupButtons.REJECT_TASK_COMPLETENESS
+    assert reject_button.callback_data == (
+        f'{CallbackDataPrefixes.CONFIRM_TASK_COMPLETENESS}:'
+        f'{CallbackDataActions.REJECT_TASK_COMPLETENESS.value}:'
         f'{FakeTaskAssociationConfig.ID}'
     )
